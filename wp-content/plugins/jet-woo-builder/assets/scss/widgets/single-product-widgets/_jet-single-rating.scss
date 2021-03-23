@@ -1,0 +1,26 @@
+.single-product {
+	.product {
+		.elementor-jet-single-rating {
+			.woocommerce-product-rating {
+				display: flex;
+				flex-wrap: wrap;
+				width: 100%;
+				
+				&:before,
+				&:after {
+					display: none;
+				}
+				
+				.star-rating {
+					&:before {
+						opacity: 1;
+					}
+					
+					> span .rating:before {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+}
