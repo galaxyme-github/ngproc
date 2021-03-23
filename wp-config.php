@@ -56,6 +56,8 @@ define( 'LOGGED_IN_SALT',   'jsqf5k4vplvjboiljajgfxcmqlu1lpxvoxndzcp18gzilcddugj
 define( 'NONCE_SALT',       '9knfham2w6xualrqhm2tqbc4spkvccvqw5kjlx0pann1bfk9udsnl3vhfg2bcsel' );
 define('CONCATENATE_SCRIPTS', false);
 define( 'SCRIPT_DEBUG', true );
+define( 'WP_DEBUG', true );
+define( 'FS_METHOD', 'direct' );
 
 /**#@-*/
 

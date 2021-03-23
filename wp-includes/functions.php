@@ -5156,16 +5156,18 @@ function _doing_it_wrong( $function, $message, $version ) {
 				__( 'https://wordpress.org/support/article/debugging-in-wordpress/' )
 			);
 
+      /*
+      // ALTERADO
 			trigger_error(
 				sprintf(
-					/* translators: Developer debugging message. 1: PHP function name, 2: Explanatory message, 3: Version information message. */
+					/* translators: Developer debugging message. 1: PHP function name, 2: Explanatory message, 3: Version information message.
 					__( '%1$s was called <strong>incorrectly</strong>. %2$s %3$s' ),
 					$function,
 					$message,
 					$version
 				),
 				E_USER_NOTICE
-			);
+			);*/
 		} else {
 			if ( is_null( $version ) ) {
 				$version = '';
@@ -7593,3 +7595,99 @@ function is_php_version_compatible( $required ) {
 function wp_fuzzy_number_match( $expected, $actual, $precision = 1 ) {
 	return abs( (float) $expected - (float) $actual ) <= $precision;
 }
+
+/* ALTERADO
+add_action( 'init', 'wpse26388_rewrites_init' );
+function wpse26388_rewrites_init(){
+    add_rewrite_rule(
+        '^produtos_add/(.*?)$',
+        'index.php?pagename=produtos_add&product_name=$matches[1]',
+        'top' );
+}
+
+add_filter( 'query_vars', 'wpse26388_query_vars' );
+function wpse26388_query_vars( $query_vars ){
+    $query_vars[] = 'product_name';
+    return $query_vars;
+} */
+
+//add_filter( 'the_content', 'my_the_content_filter' );
+//function my_the_content_filter( $content ) {
+    //$content = str_replace('/produtos/(.*)', '/addnew?product_name=' ,$content);
+    /*$html = str_get_html($content);
+    
+    foreach($html->find('a href') as $element)
+       echo $element->src . '<br>';*/
+    /*$matches = array();
+    $pattern = '/(a href=\\".*?\\/produtos)\\/(.*?)(\\".*?)(\\<h3.*?\\>)([^\\<]*)/';
+    $result = preg_match_all($pattern, $content, $matches);
+    
+    print_r($matches);
+    global $wpdb;
+    $arr = array();
+    foreach ($matches[0] as $mt) {
+       $categoria = $wpdb->get_results( "SELECT wt.name FROM wp7u_posts wp INNER JOIN wp7u_term_relationships wr ON wp.id = wr.object_id INNER JOIN wp7u_terms wt ON wt.term_id = wr.term_taxonomy_id WHERE wp.post_title = '" . $mt[4] . "'" );
+       $arr[$mt[4]] = $categoria;
+       echo $mt[4] . $categoria . "catt<br>";
+    }
+  
+    $content = preg_replace('/(a href=\".*?\/produtos)\/(.*?)(\".*?)(\<h3.*?\>)([^\<]*)(.*?\>[^\<]*\<span[^\>]*\>)([^\<]*)/', "$1?product_name=$5&categoria=&valor=$7&$3$4$5$6$7", $content);
+    */
+    //$content = preg_replace('/produtos_add_new/', 'produtos_add', $content);
+   
+//    return $content;
+//}
+
+function add_specific_page_code() {
+    if (strpos($_SERVER["REQUEST_URI"], '/') != -1) {
+      $page_slug = strtok(trim( $_SERVER["REQUEST_URI"] , '/' ), "/");
+      
+      /*if ($page_slug == 'home') {
+         $page_product = strtok("/");
+         global $wpdb;
+
+         //$path = parse_url(get_option('siteurl'), PHP_URL_PATH);
+         //$host = parse_url(get_option('siteurl'), PHP_URL_HOST);
+         //echo $path . $host . "<br>";
+
+
+         $nome = $wpdb->get_results( "SELECT wm.meta_value FROM wp7u_posts wp INNER JOIN wp7u_postmeta wm ON wp.id = wm.post_id WHERE wp.post_name = '" . $page_product . "' AND meta_key = '_product_name'" );
+         $categoria = $wpdb->get_results( "SELECT wt.name FROM wp7u_posts wp INNER JOIN wp7u_term_relationships wr ON wp.id = wr.object_id INNER JOIN wp7u_terms wt ON wt.term_id = wr.term_taxonomy_id WHERE wp.post_name = '" . $page_product . "'" );
+         $valor = $wpdb->get_results( "SELECT wm.meta_value FROM wp7u_posts wp INNER JOIN wp7u_postmeta wm ON wp.id = wm.post_id WHERE wp.post_name = '" . $page_product . "' AND meta_key = '_price'" );
+         setcookie( 'product_name', $nome[0]->meta_value, time()+60*60*24*2, "/", "ngproc.com" );
+         setcookie( 'categoria', $categoria[0]->name, time()+60*60*24*2, "/", "ngproc.com" );
+         setcookie( 'valor', $valor[0]->meta_value, time()+60*60*24*2, "/", "ngproc.com" );
+         setcookie( 'direct_link', '1', time()+60**60*24*2, "/", "ngproc.com" );
+
+         wp_redirect( 'http://login.ngproc.com/client/quotation/add_new' );
+         exit();
+         //echo $nome[0]->meta_value . $categoria[0]->name . $valor[0]->meta_value . "lalalalal<br>";
+         //print_r($_COOKIE );
+         //setcookie('cookiename', 'data', time()+60*60*24*365);
+      }
+      else */if ($page_slug == 'cotacao_redirect') {
+         $nome = strtok("/");
+
+         setcookie( 'product_name', $nome, time()+60*60*24*2, "/", "ngproc.com" );
+         setcookie( 'direct_link', '1', time()+60**60*24*2, "/", "ngproc.com" );
+
+         wp_redirect( 'http://login.ngproc.com/client/quotation/add_new' );
+         exit();
+      }
+    }
+} 
+add_action( 'init', 'add_specific_page_code' );
+// To change add to cart text on single product page
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'woocommerce_custom_single_add_to_cart_text' ); 
+function woocommerce_custom_single_add_to_cart_text() {
+    return __( 'Comprar Cotação', 'woocommerce' ); 
+}
+
+// To change add to cart text on product archives(Collection) page
+add_filter( 'woocommerce_product_add_to_cart_text', 'woocommerce_custom_product_add_to_cart_text' );  
+function woocommerce_custom_product_add_to_cart_text() {
+    return __( 'Comprar Cotação', 'woocommerce' );
+}
+
+/* FIM ALTERADO */
+
