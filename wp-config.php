@@ -26,7 +26,7 @@ define( 'DB_NAME', 'ngproc_wp450' );
 define( 'DB_USER', 'root' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '' );
+define( 'DB_PASSWORD', 'Ja6hEcQWhh%mG@$2$EITBBr3' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'localhost' );
